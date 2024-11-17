@@ -18,7 +18,7 @@ git clone https://github.com/DatobyWS/FrontStory.git
 pip install -r requirements.txt
 ```
 
-##Usage
+## Usage
 from data_processor import DataProcessor
 from report_generator import ReportGenerator
 
