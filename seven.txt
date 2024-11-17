@@ -1,0 +1,71 @@
+-- 1. First, let's get the base join structure
+SELECT * FROM cost_report c
+JOIN revenue_report r ON c.campaign_id = r.campaign_id;
+
+-- 2. Add date formatting
+SELECT DATE_FORMAT(c.data_date, '%Y/%m/%d') as date
+FROM cost_report c
+JOIN revenue_report r ON c.campaign_id = r.campaign_id;
+
+-- 3. Add campaign identification
+SELECT 
+    DATE_FORMAT(c.data_date, '%Y/%m/%d') as date,
+    c.campaign_id,
+    c.campaign_name
+FROM cost_report c
+JOIN revenue_report r ON c.campaign_id = r.campaign_id;
+
+-- 4. Add revenue and cost metrics
+SELECT 
+    DATE_FORMAT(c.data_date, '%Y/%m/%d') as date,
+    c.campaign_id,
+    c.campaign_name,
+    r.revenue as total_revenue,
+    c.cost as total_cost
+FROM cost_report c
+JOIN revenue_report r ON c.campaign_id = r.campaign_id;
+
+-- 5. Add calculated fields
+SELECT 
+    DATE_FORMAT(c.data_date, '%Y/%m/%d') as date,
+    c.campaign_id,
+    c.campaign_name,
+    r.revenue as total_revenue,
+    c.cost as total_cost,
+    (r.revenue - c.cost) as total_profit,
+    c.clicks as total_clicks
+FROM cost_report c
+JOIN revenue_report r ON c.campaign_id = r.campaign_id;
+
+-- 6. Add performance metrics
+SELECT 
+    DATE_FORMAT(c.data_date, '%Y/%m/%d') as date,
+    c.campaign_id,
+    c.campaign_name,
+    r.revenue as total_revenue,
+    c.cost as total_cost,
+    (r.revenue - c.cost) as total_profit,
+    c.clicks as total_clicks,
+    (r.revenue / c.cost) as total_roi,
+    (c.cost / c.clicks) as avg_cpc
+FROM cost_report c
+JOIN revenue_report r ON c.campaign_id = r.campaign_id;
+
+-- 7. Final complete query with all metrics
+SELECT 
+    DATE_FORMAT(c.data_date, '%Y/%m/%d') as date,
+    c.campaign_id,
+    c.campaign_name,
+    r.revenue as total_revenue,
+    c.cost as total_cost,
+    (r.revenue - c.cost) as total_profit,
+    c.clicks as total_clicks,
+    (r.revenue / c.cost) as total_roi,
+    (c.cost / c.clicks) as avg_cpc,
+    (r.revenue / 24) as hourly_avg_revenue,
+    CASE 
+        WHEN (r.revenue - c.cost) > 0 THEN 24 
+        ELSE 0 
+    END as positive_profit_hours
+FROM cost_report c
+JOIN revenue_report r ON c.campaign_id = r.campaign_id;
